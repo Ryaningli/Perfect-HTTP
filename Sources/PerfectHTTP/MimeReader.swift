@@ -109,8 +109,8 @@ public final class MimeReader {
 	/// Initialize given a Content-type header line.
 	/// - parameter contentType: The Content-type header line.
 	/// - parameter tempDir: The path to the directory in which to store temporary files. Defaults to "/tmp/".
-	public init(_ contentType: String, tempDir: String = "/tmp/") {
-		self.tempDirectory = tempDir
+	public init(_ contentType: String, tempDir: String?) {
+		self.tempDirectory = tempDir ? tempDir : NSTemporaryDirectory()
 		if contentType.hasPrefix(kMultiPartForm) {
 			self.multi = true
 			if let range = contentType.range(of: kBoundary) {
