@@ -27,6 +27,7 @@
 	let S_IWOTH = (S_IWGRP >> 3)
 #else
 	import Darwin
+    import UIKit
 #endif
 import PerfectLib
 
@@ -110,7 +111,15 @@ public final class MimeReader {
 	/// - parameter contentType: The Content-type header line.
 	/// - parameter tempDir: The path to the directory in which to store temporary files. Defaults to "/tmp/".
 	public init(_ contentType: String, tempDir: String?) {
-		self.tempDirectory = tempDir ? tempDir : NSTemporaryDirectory()
+        if tempDir == nil {
+            #if os(iOS)
+            self.tempDirectory = NSTemporaryDirectory()
+            #else
+            self.tempDirectory = "/tmp/"
+            #endif
+        } else {
+            self.tempDirectory = tempDir!
+        }
 		if contentType.hasPrefix(kMultiPartForm) {
 			self.multi = true
 			if let range = contentType.range(of: kBoundary) {
